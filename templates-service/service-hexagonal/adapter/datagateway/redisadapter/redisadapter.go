@@ -1,5 +1,7 @@
 package redisadapter
 
+// @TODO: use redis HashMap
+
 import (
 	"context"
 	"encoding/json"
@@ -29,8 +31,12 @@ func New(conf config.RedisConf) datagateway.DataGatewayTodo {
 	return &redisAdapter{rd: rd}
 }
 
+func baseKeyTodo() string {
+	return "todo:"
+}
+
 func keyTodo(todoId string) string {
-	return fmt.Sprintf("todo:%s", todoId)
+	return fmt.Sprintf("%s:%s", baseKeyTodo(), todoId)
 }
 
 func confAddress(conf config.RedisConf) string {
@@ -75,6 +81,10 @@ func (r *redisAdapter) GetTodo(ctx context.Context, id string) (entity.Todo, err
 	}
 
 	return *todo, nil
+}
+
+func (r *redisAdapter) GetTodos(ctx context.Context) ([]entity.Todo, error) {
+	return nil, errors.New("not implemented")
 }
 
 func (r *redisAdapter) UpdateTodo(
