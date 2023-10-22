@@ -1,4 +1,4 @@
-package flatlib
+package libflat
 
 import (
 	"reflect"

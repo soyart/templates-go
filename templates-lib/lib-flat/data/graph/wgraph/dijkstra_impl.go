@@ -7,7 +7,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"example.com/flatlib/data/container/list"
+	"example.com/libflat/data/container/list"
 )
 
 // GraphDijkstraImpl[T] wraps GraphWeightedImpl[T], where T is generic type numeric types and S is ~string.

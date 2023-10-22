@@ -1,6 +1,6 @@
 package wgraph
 
-import "example.com/flatlib/data/graph"
+import "example.com/libflat/data/graph"
 
 // NodeWeighted should be able to put in a priority queue, just in case topological sort is needed.
 type NodeWeighted[T Weight] interface {

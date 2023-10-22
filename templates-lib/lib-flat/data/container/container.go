@@ -1,6 +1,6 @@
 package container
 
-import "example.com/flatlib/data"
+import "example.com/libflat/data"
 
 type BasicContainer[T any] interface {
 	Push(x T)

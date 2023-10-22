@@ -1,9 +1,9 @@
-package flatlib
+package libflat
 
 import (
 	"golang.org/x/exp/constraints"
 
-	"example.com/flatlib/data"
+	"example.com/libflat/data"
 )
 
 type GoNumber interface {

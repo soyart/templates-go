@@ -5,9 +5,9 @@ import (
 	"math"
 	"reflect"
 
-	"example.com/flatlib"
-	"example.com/flatlib/data/graph"
-	"example.com/flatlib/data/graph/wgraph"
+	"example.com/libflat"
+	"example.com/libflat/data/graph"
+	"example.com/libflat/data/graph/wgraph"
 )
 
 // This code purpose is to show an example of how to use the graph and wgraph packages
@@ -119,7 +119,7 @@ func main() {
 		}
 
 		pathToNode := wgraph.DijkstraShortestPathReconstruct(shortestPathsFromTokyo.Paths, shortestPathsFromTokyo.From, dst)
-		flatlib.ReverseInPlace(pathToNode)
+		libflat.ReverseInPlace(pathToNode)
 
 		fmt.Println("> from", fromNode.GetKey(), "to", dst.GetKey(), "min flightHours", dst.GetValue())
 		for _, via := range pathToNode {
@@ -133,7 +133,7 @@ func main() {
 	for _, dst := range unweightedGraph.GetNodes() {
 		shortestHopsFromTokyo, hops, found := graph.BFSHashMapGraphV1[float64](unweightedGraph, fromNode, dst)
 		fmt.Println("path to", dst.(*city).GetKey(), "found", found, "shortestHops", hops)
-		flatlib.ReverseInPlace(shortestHopsFromTokyo)
+		libflat.ReverseInPlace(shortestHopsFromTokyo)
 		for i, hop := range shortestHopsFromTokyo {
 			fmt.Println("hop", i, hop.(*city).GetKey())
 		}

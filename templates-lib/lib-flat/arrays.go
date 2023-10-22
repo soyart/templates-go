@@ -1,4 +1,4 @@
-package flatlib
+package libflat
 
 // CopySlice return a copy of |arr|.
 func CopySlice[T any](arr []T) []T {

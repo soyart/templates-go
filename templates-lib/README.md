@@ -2,7 +2,7 @@
 
 An example template for Go library structure.
 
-- [`flat-lib`](./flat-lib)
+- [`lib-flat`](./lib-flat)
 
   A _flat_ Go library, where each package represents
   each category of code.

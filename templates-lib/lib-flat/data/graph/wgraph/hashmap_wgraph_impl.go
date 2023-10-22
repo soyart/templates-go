@@ -3,7 +3,7 @@ package wgraph
 // TODO: more relaxed generic types
 
 import (
-	"example.com/flatlib/data/graph"
+	"example.com/libflat/data/graph"
 )
 
 // HashMapGraphWeightedImpl[W, N] is the default implementation of GraphWeighted[N, EdgeWeighted[W], W].

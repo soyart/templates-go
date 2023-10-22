@@ -1,4 +1,4 @@
-module example.com/flatlib
+module example.com/libflat
 
 go 1.21.3
 

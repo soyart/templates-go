@@ -1,6 +1,6 @@
 package list
 
-import "example.com/flatlib/data"
+import "example.com/libflat/data"
 
 type WrappedList[T any, L BasicList[T]] BasicList[T]
 

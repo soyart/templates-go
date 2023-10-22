@@ -1,7 +1,7 @@
 package graph
 
 import (
-	"example.com/flatlib/data"
+	"example.com/libflat/data"
 )
 
 type nodeValue any

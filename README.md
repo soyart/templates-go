@@ -12,6 +12,6 @@ An example repository for Go projects architecture.
 
   Templates for Go libraries
 
-  - [`flat-lib`](./templates-lib/flat-lib)
+  - [`lib-flat`](./templates-lib/lib-flat)
 
   A flat Go library

@@ -3,7 +3,7 @@ package wgraph
 import (
 	"testing"
 
-	flatlib "example.com/flatlib"
+	libflat "example.com/libflat"
 )
 
 type dijkstraTestUtils[T WeightDijkstra] struct {
@@ -215,7 +215,7 @@ func testDijkstra[T WeightDijkstra](t *testing.T, nameStart, nameFinish string) 
 		// t.Logf("dst node: %v\n", nodeKey)
 		// Test paths
 		pathToNode := dijkShortestPaths.ReconstructPathTo(node)
-		flatlib.ReverseInPlace(pathToNode)
+		libflat.ReverseInPlace(pathToNode)
 		if hops := len(pathToNode); hops != util.expectedPathHops {
 			t.Fatalf(fatalMsgPathLen, nameStart, nodeKey, hops, util.expectedPathHops)
 		}
