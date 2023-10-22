@@ -7,7 +7,7 @@ organized with hexagonal architecture (ports-and-adapters).
 
 > Note: HexArch has nothing to do with number 6 or hexagons
 
-HexArch is mainly concerned with jseperation of external systemsh,
+HexArch is mainly concerned with seperation of external systems,
 that is, code for connecting to other systems, e.g. databases,
 messengers, etc must be pushed to the edge (outter ring) and
 must not taint business-related code.
@@ -25,12 +25,50 @@ through _core_ to _driven_ parts.
 
 Both sides of core can have ports and adapters.
 
+### My convention
+
+- No technical details is known in the business level,
+  and that every implemenations and their fields are private.
+
+- For database:
+
+  - Port interfaces are prefixed with `DataGateway`, e.g. `DataGatewayUser`
+    is the interface for writing/querying users in our systems.
+
+  - Adapters are prefixed with `adapter` (unexported),
+    or `dataStore`, e.g. `adapterSql` and `adapterRedis`,
+    `dataStoreSql`, `dataStoreRedis`.
+
+  - Field names of type `DataGateway*` are prefixed with `repo`,
+    e.g:
+
+    ```go
+    type DataGatewayUser interface {
+      // code
+    }
+
+    type adapterRedis struct {
+      // implements DataGatewayUser
+    }
+
+    type serviceUser struct {
+      repo DataGatewayUser
+    }
+    ```
+
+- For service:
+
+  - Port interfaces are prefixed with `Port`, e.g. `PortUser`
+
+  - Adapters (implementations of ports) are prefixed with `service`,
+    e.g. `serviceUser` implements `PortUser`
+
 ### HexArch: ports and adapters
 
-When data must move between layers, and ports adapters
-are used to move and translate from one layer to the next.
+> Like with USB ports, the adapters connects to the ports.
 
-> Like with USB ports, hthe adapters connects to the portsj.
+When data must move between layers, ports and adapters
+are used to move and translate data from one layer to the next.
 
 Ports are entrypoint to the core business code,
 much like a _gateway_ for our data entering the application,
@@ -42,7 +80,8 @@ by implementing them.
 If data at the different side of the port/adapter can be shared,
 then HexArch allows it to be shared.
 
-A single _port_ can be connected to >1 adapters.
+A single _port_ can be connected to >1 adapters, i.e. a single
+interface and be implemented by many classes of objects.
 
 ### Example: driven side (database-side)
 
@@ -51,6 +90,8 @@ Let's say we have a port interface for persistent data called
 
 ```go
 package datagateway
+
+// code
 
 // *Port*
 type DataGatewayTodo interface {
@@ -146,3 +187,88 @@ translate the low-level data representation to the one used in core.
 
 Since `createTodo` is tech-agnostic, it can be called from
 gRPC or HTTP REST handlers, and the result would have been the same.
+
+### Example: driving side
+
+Let's say our core business ports are (1) create todo, (2)
+get all user's unexpired todos, and (3) expire todo:
+
+```go
+package core
+
+// code
+
+/* Port */
+type PortTodo interface {
+  CreateTodo(entity.Todo) error
+  GetLiveTodos(userId string) ([]entity.Todo, error)
+  ExpireTodo(userId string, todoId string) error
+}
+```
+
+And this port interface is implemented by `serviceTodo`:
+
+```go
+package servicetodo
+
+// code
+
+/* Adapter */
+type serviceTodo struct {
+  // serviceTodo.repo is just an interface
+  repo datagateway.DataGatewayTodo
+}
+
+func (s *serviceTodo) CreateTodo(todo entity.Todo) error {
+  return s.repo.CreateTodo(todo)
+}
+func (s *serviceTodo) GetLiveTodos(userId string) {..}
+func (s *serviceTodo) ExpireTodo(userId, todoId string) {..}
+```
+
+If our code happens to be run as either a HTTP REST server or gRPC server,
+then all we need to do is to make these server implementations call our `service`
+wrapped behind `core.PortTodo`.
+
+
+### All together
+
+
+Now, if we combine both _driving_ and _driven_ side of our code,
+we have a nice, clean code that connects to other pieces via interfaces.
+
+```text
+HTTP REST / gRPC
+
+       |
+       v
+
+    PortTodo
+    (Implemented by serviceTodo)
+                        |
+                        v
+
+                  DataGatewayTodo (`via serviceTodo.repo`)
+                  (Implemented by dataStoreRedis)
+                        |
+                        v
+
+                  External Systems (Redis server)
+```
+
+And gRPC server does not know how `PortTodo` does its thing, all it knows is
+to trust `PortTodo` implementation to do the right thing.
+
+`PortTodo` and its implementations does not know if it's being called
+from gRPC or REST callers. `PortTodo` doesn't even know if its implementations
+persists data, and most probably does not even know about `DataGatewayTodo`.
+
+`serviceTodo` does now know exactly what `serviceTodo.repo` does,
+all it knows is that it can use it as a todo repository via `DataGatewayTodo`.
+
+`DataGatewayTodo` does not know what databases, if at all, are used
+to implement its methods. When this interface is actually implemented by
+`dataStoreRedis`, only `dataStoreRedis` knows that this implementation
+of `DataGatewayTodo` uses Redis.
+
+Now we can mess up one part of our code without affecting the other.
