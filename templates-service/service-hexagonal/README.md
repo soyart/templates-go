@@ -28,7 +28,8 @@ Both sides of core can have ports and adapters.
 ### My convention
 
 - No technical details is known in the business level,
-  and that every implemenations and their fields are private.
+  and that every implemenation remains private. Callers must
+  only access these layers via interfaces, or pure functions.
 
 - For database:
 
