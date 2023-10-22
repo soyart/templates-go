@@ -12,6 +12,19 @@ import (
 	"example.com/servicehex/domain/entity"
 )
 
+func createTodo(
+	ctx context.Context,
+	repo datagateway.DataGatewayTodo,
+	todo entity.Todo,
+) error {
+	err := repo.CreateTodo(ctx, todo)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
+}
+
 func getTodoById(
 	ctx context.Context,
 	repo datagateway.DataGatewayTodo,

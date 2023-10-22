@@ -10,7 +10,7 @@ type DataGatewayTodo interface {
 	CreateTodo(ctx context.Context, todo entity.Todo) error
 	GetTodo(ctx context.Context, userId string, todoId string) (entity.Todo, error)
 	GetTodos(ctx context.Context, userId string) ([]entity.Todo, error)
-	UpdateTodo(ctx context.Context, userId string, todoId string, todo entity.Todo) error
+	UpdateTodo(ctx context.Context, userId string, todoId string, update entity.Todo) error
 	DeleteTodo(ctx context.Context, userId string, todoId string) error
 	DeleteTodos(ctx context.Context, userId string) error
 }

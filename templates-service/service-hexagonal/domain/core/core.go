@@ -8,6 +8,7 @@ import (
 )
 
 type PortTodo interface {
+	CreateTodo(ctx context.Context, todo entity.Todo) error
 	GetTodoById(ctx context.Context, userId, todoId string) (entity.Todo, error)
 	GetTodos(ctx context.Context, userId string, sortMode EnumSortMode) ([]entity.Todo, error)
 	GetExpiredTodos(ctx context.Context, userId string, cutoff time.Time, sortMode EnumSortMode) ([]entity.Todo, error)

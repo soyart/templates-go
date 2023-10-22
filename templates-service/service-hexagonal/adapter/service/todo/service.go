@@ -19,6 +19,14 @@ func New(repo datagateway.DataGatewayTodo) core.PortTodo {
 	return &service{repo: repo}
 }
 
+func (s *service) CreateTodo(ctx context.Context, todo entity.Todo) error {
+	if err := createTodo(ctx, s.repo, todo); err != nil {
+		return errors.Wrap(err, "failed to create new todo")
+	}
+
+	return nil
+}
+
 func (s *service) GetTodoById(
 	ctx context.Context,
 	userId string,
