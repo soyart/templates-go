@@ -1,7 +1,5 @@
 package redisadapter
 
-// @TODO: use redis HashMap
-
 import (
 	"context"
 	"encoding/json"
@@ -32,11 +30,7 @@ func New(conf config.RedisConf) datagateway.DataGatewayTodo {
 }
 
 func baseKeyTodo() string {
-	return "todo:"
-}
-
-func keyTodo(todoId string) string {
-	return fmt.Sprintf("%s:%s", baseKeyTodo(), todoId)
+	return "todo"
 }
 
 func confAddress(conf config.RedisConf) string {
@@ -52,9 +46,7 @@ func (r *redisAdapter) CreateTodo(
 		return errors.Wrap(err, "failed to marshal todo to json")
 	}
 
-	k := keyTodo(todo.Id)
-
-	if err := r.rd.Set(ctx, k, b, 0).Err(); err != nil {
+	if err := r.rd.HSet(ctx, baseKeyTodo(), todo.Id, b, 0).Err(); err != nil {
 		return errors.Wrap(err, "failed to save todo to redis")
 	}
 
@@ -62,9 +54,7 @@ func (r *redisAdapter) CreateTodo(
 }
 
 func (r *redisAdapter) GetTodo(ctx context.Context, id string) (entity.Todo, error) {
-	k := keyTodo(id)
-
-	result := r.rd.Get(ctx, k)
+	result := r.rd.HGet(ctx, baseKeyTodo(), id)
 	if err := result.Err(); err != nil {
 		if errors.Is(err, redis.Nil) {
 			return entity.Todo{}, errors.Wrapf(err, "no such todo id")
@@ -91,43 +81,28 @@ func (r *redisAdapter) UpdateTodo(
 	ctx context.Context,
 	id string,
 	update entity.Todo,
-) (
-	entity.Todo,
-	error,
-) {
-	if update.Id != id {
-		return entity.Todo{}, fmt.Errorf("id and update.Id differ: %s vs %s", id, update.Id)
+) error {
+	key := baseKeyTodo()
+
+	exists, err := r.rd.HExists(ctx, key, id).Result()
+	if !exists || errors.Is(err, redis.Nil) {
+		return errors.Wrapf(err, "no such existing todo id %s, and failed to rollback (delete) updated todo", id)
 	}
 
-	k := keyTodo(id)
 	b, err := json.Marshal(update)
 	if err != nil {
-		return entity.Todo{}, errors.Wrap(err, "failed to marshal todo json")
+		return errors.Wrap(err, "failed to marshal todo json")
 	}
 
-	result := r.rd.GetSet(ctx, k, b)
-	if err := result.Err(); err != nil {
-		if errors.Is(err, redis.Nil) {
-			return entity.Todo{}, errors.Wrapf(err, "no such existing todo id %s", id)
-		}
-
-		return entity.Todo{}, errors.Wrap(err, "failed to update todo")
+	if err := r.rd.HSet(ctx, key, id, b).Err(); err != nil {
+		return errors.Wrap(err, "failed to update todo")
 	}
 
-	oldTodoJson := result.Val()
-	oldTodo := new(entity.Todo)
-
-	if err := json.Unmarshal([]byte(oldTodoJson), oldTodo); err != nil {
-		return entity.Todo{}, errors.Wrap(err, "failed to unmarshal old todo json from redis")
-	}
-
-	return *oldTodo, nil
+	return nil
 }
 
 func (r *redisAdapter) DeleteTodo(ctx context.Context, id string) error {
-	k := keyTodo(id)
-
-	c, err := r.rd.Del(ctx, k).Result()
+	c, err := r.rd.HDel(ctx, baseKeyTodo(), id).Result()
 	if err != nil {
 		return errors.Wrapf(err, "failed to delete todo id %s", id)
 	}
