@@ -1,17 +1,22 @@
 # lib-flat
 
-Go libraries are usually structured very flatly.
+Go libraries usually have very flat structure.
 
-Most of the times, code is only placed in the module root.
+Most of the times, code is only placed in the module root,
+as with [github.com/go-sql-driver/mysql](https://github.com/go-sql-driver/mysql),
+[github.com/holiman/uint256](https://github.com/holiman/uint256/blob/master/uint256.go),
+and [github.com/wangjia184/sortedset](https://github.com/wangjia184/sortedset).
+
 The central/main symbols of a library is always placed in its root.
-Other secondary symbols can be placed in their own modules.
+Other less-important public functions and symbols can be placed in their own
+modules, as with most SDKs.
 
 ## lib-flat structure
 
-lib-flat is modeled after [gsl](https://github.com/soyart/gsl), which is
-a general purpose Go library containing 3 main categories of code:
+lib-flat code is copied [gsl](https://github.com/soyart/gsl), which is
+a general purpose Go library containing 3 main rough categories of code:
 
-- Batteries-included (general utils)
+- "Batteries-included" (general utils)
 
     The code in this category is placed at the root of the library
 
