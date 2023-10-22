@@ -31,7 +31,7 @@ Both sides of core can have ports and adapters.
   and that every implemenation remains private. Callers must
   only access these layers via interfaces, or pure functions.
 
-- For database:
+- For database (driven side):
 
   - Port interfaces are prefixed with `DataGateway`, e.g. `DataGatewayUser`
     is the interface for writing/querying users in our systems.
@@ -53,11 +53,11 @@ Both sides of core can have ports and adapters.
     }
 
     type serviceUser struct {
-      repo DataGatewayUser
+      repoUser DataGatewayUser
     }
     ```
 
-- For service:
+- For driving side:
 
   - Port interfaces are prefixed with `Port`, e.g. `PortUser`
 
