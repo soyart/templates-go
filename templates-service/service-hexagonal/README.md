@@ -39,11 +39,15 @@ $ tree --filesfirst
 │   │       └── user.go
 │   └── entity
 │       └── entity.go
+├── grpc
+│   └── cmd
+│       └── main.go
 ├── internal
 │   └── pwhash
 │       └── bcrypt.go
 └── restapi
     ├── cmd
+    │   └── main.go
     ├── internal
     │   ├── api
     │   │   ├── api.go
