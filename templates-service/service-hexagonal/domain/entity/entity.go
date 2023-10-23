@@ -19,7 +19,7 @@ type Todo struct {
 type User struct {
 	Id       string `json:"id" gorm:"primaryKey;column:id"`
 	Username string `json:"username" gorm:"column:username"`
-	Password string `json:"-" gorm:"column:password"`
+	Password []byte `json:"-" gorm:"column:password"`
 
 	CreatedAt time.Time `json:"created_at" gorm:"column:created_at;notnull"`
 }

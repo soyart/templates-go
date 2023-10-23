@@ -18,6 +18,7 @@ type DataGatewayTodo interface {
 type DataGatewayUser interface {
 	CreateUser(context.Context, entity.User) error
 	GetUser(context.Context, string) (entity.User, error)
+	GetUserByUsername(context.Context, string) (entity.User, error)
 	UpdateUser(context.Context, string, entity.User) error
 	DeleteUser(context.Context, string) error
 }

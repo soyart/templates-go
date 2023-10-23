@@ -30,6 +30,16 @@ func (m *mockRepoUser) GetUser(ctx context.Context, userId string) (entity.User,
 	return u, nil
 }
 
+func (m *mockRepoUser) GetUserByUsername(ctx context.Context, username string) (entity.User, error) {
+	for _, u := range m.users {
+		if u.Username == username {
+			return u, nil
+		}
+	}
+
+	return entity.User{}, fmt.Errorf("no such username %s", username)
+}
+
 func (m *mockRepoUser) UpdateUser(ctx context.Context, userId string, user entity.User) error {
 	savedUser, found := m.users[userId]
 	if !found {

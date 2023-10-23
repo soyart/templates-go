@@ -20,9 +20,9 @@ type PortTodo interface {
 
 type PortUser interface {
 	Register(ctx context.Context, user entity.User) error
-	Login(ctx context.Context, username string, password string) (entity.User, error)
-	ChangePassword(ctx context.Context, username string, password string, newPassword string) error
-	DeleteUserById(ctx context.Context, userId string)
+	Login(ctx context.Context, username string, password []byte) (entity.User, error)
+	ChangePassword(ctx context.Context, userId string, password []byte, newPassword []byte) error
+	DeleteUser(ctx context.Context, userId string) error
 }
 
 func ExpireTodo(todo *entity.Todo) {

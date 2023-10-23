@@ -66,5 +66,35 @@ func TestTodoCrud(t *testing.T) {
 			t.Logf("Expected: %+v", expected)
 			t.Logf("Actual: %+v", actual)
 		}
+
+		deleteTodoById(nil, repo, userId, actual.Id)
+	}
+
+	todos, err = getTodos(nil, repo, userId, core.SortNoSort)
+	if err != nil {
+		t.Logf("Unexpected error after delete")
+		t.Errorf("Error: %s", err.Error())
+	}
+	if l := len(todos); l != 0 {
+		t.Logf("Unexpected todo length")
+		t.Errorf("Expecting %d, got %d", 0, l)
+	}
+
+	for i := 0; i < numTodos; i++ {
+		todoId := mockTodo(i, baseTodoId, userId).Id
+
+		todo, err := getTodoById(nil, repo, userId, todoId)
+		if err != nil {
+			t.Logf("Found error when get after delete")
+			t.Logf("Error: %s", err.Error())
+		}
+
+		if todo.Id == todoId {
+			t.Errorf("Unexpected value (todoId) after delete")
+		}
+
+		if todo.Text != "" {
+			t.Errorf("Unexpected value (text) after delete")
+		}
 	}
 }
