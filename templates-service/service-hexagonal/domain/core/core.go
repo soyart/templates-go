@@ -14,31 +14,31 @@ const MinPasswordLen = 6
 
 type PortTodo interface {
 	CreateTodo(ctx context.Context, todo entity.Todo) error
-	GetTodoById(ctx context.Context, userId, todoId string) (entity.Todo, error)
-	GetTodos(ctx context.Context, userId string, sortMode EnumSortMode) ([]entity.Todo, error)
-	GetExpiredTodos(ctx context.Context, userId string, cutoff time.Time, sortMode EnumSortMode) ([]entity.Todo, error)
-	MatchTodoTextPattern(ctx context.Context, userId, pattern string, sortMode EnumSortMode) ([]entity.Todo, error)
-	ExpireTodoById(ctx context.Context, userId, todoId string) error
-	DeleteTodoById(ctx context.Context, userId, todoId string) error
-	DeleteTodos(ctx context.Context, userId string) error
+	GetTodoByID(ctx context.Context, userID, todoID string) (entity.Todo, error)
+	GetTodos(ctx context.Context, userID string, sortMode EnumSortMode) ([]entity.Todo, error)
+	GetExpiredTodos(ctx context.Context, userID string, cutoff time.Time, sortMode EnumSortMode) ([]entity.Todo, error)
+	MatchTodoTextPattern(ctx context.Context, userID, pattern string, sortMode EnumSortMode) ([]entity.Todo, error)
+	ExpireTodoByID(ctx context.Context, userID, todoID string) error
+	DeleteTodoByID(ctx context.Context, userID, todoID string) error
+	DeleteTodos(ctx context.Context, userID string) error
 }
 
 type PortUser interface {
 	Register(ctx context.Context, user entity.User) error
 	Login(ctx context.Context, username string, password []byte) (entity.User, error)
-	ChangePassword(ctx context.Context, userId string, password []byte, newPassword []byte) error
-	DeleteUser(ctx context.Context, userId string) error
+	ChangePassword(ctx context.Context, userID string, password []byte, newPassword []byte) error
+	DeleteUser(ctx context.Context, userID string) error
 }
 
 func ExpireTodo(todo *entity.Todo) {
 	todo.Expired, todo.ExpiredAt = true, time.Now()
 }
 
-func TodoId() string {
+func TodoID() string {
 	return randUuid()
 }
 
-func UserId(username string) string {
+func UserID(username string) string {
 	return uuid.New().String()
 }
 

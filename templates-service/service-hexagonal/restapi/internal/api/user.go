@@ -41,7 +41,7 @@ func (a *restApi) Register(c *fiber.Ctx) error {
 	}
 
 	user := entity.User{
-		Id:       core.UserId(registerDto.Username),
+		ID:       core.UserID(registerDto.Username),
 		Username: registerDto.Username,
 		Password: []byte(registerDto.Password),
 	}
@@ -56,7 +56,7 @@ func (a *restApi) Register(c *fiber.Ctx) error {
 		"status": "success",
 		"user": map[string]string{
 			"username": user.Username,
-			"user_id":  user.Id,
+			"user_id":  user.ID,
 		},
 	})
 }
@@ -83,7 +83,7 @@ func (a *restApi) Login(c *fiber.Ctx) error {
 		})
 	}
 
-	token, exp, err := utils.NewJwtToken(user.Id, a.authSecret)
+	token, exp, err := utils.NewJwtToken(user.ID, a.authSecret)
 	if err != nil {
 		return c.Status(http.StatusInternalServerError).JSON(map[string]string{
 			"error": "failed to generate authentication token",
@@ -91,7 +91,7 @@ func (a *restApi) Login(c *fiber.Ctx) error {
 	}
 
 	return c.Status(http.StatusOK).JSON(map[string]interface{}{
-		"user_id":   user.Id,
+		"user_id":   user.ID,
 		"username":  user.Username,
 		"token":     token,
 		"token_exp": exp,

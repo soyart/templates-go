@@ -27,15 +27,15 @@ func (s *service) CreateTodo(ctx context.Context, todo entity.Todo) error {
 	return nil
 }
 
-func (s *service) GetTodoById(
+func (s *service) GetTodoByID(
 	ctx context.Context,
-	userId string,
-	todoId string,
+	userID string,
+	todoID string,
 ) (
 	entity.Todo,
 	error,
 ) {
-	todo, err := getTodoById(ctx, s.repo, userId, todoId)
+	todo, err := getTodoByID(ctx, s.repo, userID, todoID)
 	if err != nil {
 		return todo, errors.Wrap(err, "failed to get user todo")
 	}
@@ -45,13 +45,13 @@ func (s *service) GetTodoById(
 
 func (s *service) GetTodos(
 	ctx context.Context,
-	userId string,
+	userID string,
 	sortMode core.EnumSortMode,
 ) (
 	[]entity.Todo,
 	error,
 ) {
-	todos, err := getTodos(ctx, s.repo, userId, sortMode)
+	todos, err := getTodos(ctx, s.repo, userID, sortMode)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get user todos")
 	}
@@ -61,65 +61,65 @@ func (s *service) GetTodos(
 
 func (s *service) GetExpiredTodos(
 	ctx context.Context,
-	userId string,
+	userID string,
 	cutoff time.Time,
 	sortMode core.EnumSortMode,
 ) (
 	[]entity.Todo,
 	error,
 ) {
-	expireds, err := getExpiredTodos(ctx, s.repo, userId, cutoff, sortMode)
+	expireds, err := getExpiredTodos(ctx, s.repo, userID, cutoff, sortMode) //nolint:misspell
 	if err != nil {
-		return nil, errors.Wrapf(err, "failed to get expired todo for user %s at %s cutoff", userId, cutoff)
+		return nil, errors.Wrapf(err, "failed to get expired todo for user %s at %s cutoff", userID, cutoff)
 	}
 
-	return expireds, nil
+	return expireds, nil //nolint:misspell
 }
 
 func (s *service) MatchTodoTextPattern(
 	ctx context.Context,
-	userId string,
+	userID string,
 	pattern string,
 	sortMode core.EnumSortMode,
 ) (
 	[]entity.Todo,
 	error,
 ) {
-	matched, err := matchTodoTextPattern(ctx, s.repo, userId, pattern, sortMode)
+	matched, err := matchTodoTextPattern(ctx, s.repo, userID, pattern, sortMode)
 	if err != nil {
-		return nil, errors.Wrapf(err, "failed to match todos for user %s with %s pattern", userId, pattern)
+		return nil, errors.Wrapf(err, "failed to match todos for user %s with %s pattern", userID, pattern)
 	}
 
 	return matched, nil
 }
 
-func (s *service) ExpireTodoById(
+func (s *service) ExpireTodoByID(
 	ctx context.Context,
-	userId string,
-	todoId string,
+	userID string,
+	todoID string,
 ) error {
-	if err := expireTodoById(ctx, s.repo, userId, todoId); err != nil {
-		return errors.Wrapf(err, "failed to expire todo %s for user %s", todoId, userId)
+	if err := expireTodoByID(ctx, s.repo, userID, todoID); err != nil {
+		return errors.Wrapf(err, "failed to expire todo %s for user %s", todoID, userID)
 	}
 
 	return nil
 }
 
-func (s *service) DeleteTodoById(
+func (s *service) DeleteTodoByID(
 	ctx context.Context,
-	userId string,
-	todoId string,
+	userID string,
+	todoID string,
 ) error {
-	if err := deleteTodoById(ctx, s.repo, userId, todoId); err != nil {
-		return errors.Wrapf(err, "failed to delete todo %s for user %s", todoId, userId)
+	if err := deleteTodoByID(ctx, s.repo, userID, todoID); err != nil {
+		return errors.Wrapf(err, "failed to delete todo %s for user %s", todoID, userID)
 	}
 
 	return nil
 }
 
-func (s *service) DeleteTodos(ctx context.Context, userId string) error {
-	if err := deleteTodos(ctx, s.repo, userId); err != nil {
-		return errors.Wrapf(err, "failed to delete todos for user %s", userId)
+func (s *service) DeleteTodos(ctx context.Context, userID string) error {
+	if err := deleteTodos(ctx, s.repo, userID); err != nil {
+		return errors.Wrapf(err, "failed to delete todos for user %s", userID)
 	}
 
 	return nil

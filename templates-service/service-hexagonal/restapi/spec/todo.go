@@ -16,9 +16,9 @@ type DtoCreateTodo struct {
 // }
 
 // type DtoExpireTodo struct {
-// 	TodoId string `json:"id"`
+// 	TodoID string `json:"id"`
 // }
 
 // type DtoDeleteTodo struct {
-// 	TodoId string `json:"id"`
+// 	TodoID string `json:"id"`
 // }

@@ -47,20 +47,20 @@ func (s *service) Login(
 
 func (s *service) ChangePassword(
 	ctx context.Context,
-	userId string,
+	userID string,
 	password []byte,
 	newPassword []byte,
 ) error {
-	if err := changePassword(ctx, s.repo, userId, password, newPassword); err != nil {
-		return errors.Wrapf(err, "failed to change password for userId %s", userId)
+	if err := changePassword(ctx, s.repo, userID, password, newPassword); err != nil {
+		return errors.Wrapf(err, "failed to change password for userID %s", userID)
 	}
 
 	return nil
 }
 
-func (s *service) DeleteUser(ctx context.Context, userId string) error {
-	if err := deleteUser(ctx, s.repo, userId); err != nil {
-		return errors.Wrapf(err, "failed to delete userId %s", userId)
+func (s *service) DeleteUser(ctx context.Context, userID string) error {
+	if err := deleteUser(ctx, s.repo, userID); err != nil {
+		return errors.Wrapf(err, "failed to delete userID %s", userID)
 	}
 
 	return nil

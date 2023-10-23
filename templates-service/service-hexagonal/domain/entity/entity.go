@@ -5,8 +5,8 @@ import "time"
 // HexArch allows reusable entity structure
 // to be used in business domains and database storage.
 type Todo struct {
-	Id       string    `json:"id" gorm:"primaryKey;column:id"`
-	UserId   string    `json:"user_id" gorm:"column:user_id;notnull"`
+	ID       string    `json:"id" gorm:"primaryKey;column:id"`
+	UserID   string    `json:"user_id" gorm:"column:user_id;notnull"`
 	Text     string    `json:"text" gorm:"column:text;notnull"`
 	Deadline time.Time `json:"deadline" gorm:"column:deadline"`
 
@@ -17,7 +17,7 @@ type Todo struct {
 }
 
 type User struct {
-	Id       string `json:"id" gorm:"primaryKey;column:id"`
+	ID       string `json:"id" gorm:"primaryKey;column:id"`
 	Username string `json:"username" gorm:"column:username"`
 	Password []byte `json:"-" gorm:"column:password"`
 

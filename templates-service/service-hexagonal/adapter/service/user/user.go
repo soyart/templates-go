@@ -66,11 +66,11 @@ func login(
 func changePassword(
 	ctx context.Context,
 	repo datagateway.DataGatewayUser,
-	userId string,
+	userID string,
 	password []byte,
 	newPassword []byte,
 ) error {
-	user, err := repo.GetUser(ctx, userId)
+	user, err := repo.GetUser(ctx, userID)
 	if err != nil {
 		return errors.WithStack(err)
 	}
@@ -86,7 +86,7 @@ func changePassword(
 
 	user.Password = hashed
 
-	if err := repo.UpdateUser(ctx, userId, user); err != nil {
+	if err := repo.UpdateUser(ctx, userID, user); err != nil {
 		return errors.WithStack(err)
 	}
 
@@ -96,14 +96,14 @@ func changePassword(
 func deleteUser(
 	ctx context.Context,
 	repo datagateway.DataGatewayUser,
-	userId string,
+	userID string,
 ) error {
-	_, err := repo.GetUser(ctx, userId)
+	_, err := repo.GetUser(ctx, userID)
 	if err != nil {
 		return errors.WithStack(err)
 	}
 
-	if err := repo.DeleteUser(ctx, userId); err != nil {
+	if err := repo.DeleteUser(ctx, userID); err != nil {
 		return errors.WithStack(err)
 	}
 

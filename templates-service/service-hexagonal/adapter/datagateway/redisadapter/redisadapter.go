@@ -29,8 +29,8 @@ func New(conf config.RedisConf) datagateway.DataGatewayTodo {
 	return &adapterRedis{rd: rd}
 }
 
-func baseKeyTodo(userId string) string {
-	return "todo:" + userId
+func baseKeyTodo(userID string) string {
+	return "todo:" + userID
 }
 
 func confAddress(conf config.RedisConf) string {
@@ -46,15 +46,15 @@ func (r *adapterRedis) CreateTodo(
 		return errors.Wrap(err, "failed to marshal todo to json")
 	}
 
-	if err := r.rd.HSet(ctx, baseKeyTodo(todo.UserId), todo.Id, b, 0).Err(); err != nil {
+	if err := r.rd.HSet(ctx, baseKeyTodo(todo.UserID), todo.ID, b, 0).Err(); err != nil {
 		return errors.Wrap(err, "failed to save todo to redis")
 	}
 
 	return nil
 }
 
-func (r *adapterRedis) GetTodo(ctx context.Context, userId, todoId string) (entity.Todo, error) {
-	result := r.rd.HGet(ctx, baseKeyTodo(userId), todoId)
+func (r *adapterRedis) GetTodo(ctx context.Context, userID, todoID string) (entity.Todo, error) {
+	result := r.rd.HGet(ctx, baseKeyTodo(userID), todoID)
 	if err := result.Err(); err != nil {
 		if errors.Is(err, redis.Nil) {
 			return entity.Todo{}, errors.Wrapf(err, "no such todo id")
@@ -73,17 +73,17 @@ func (r *adapterRedis) GetTodo(ctx context.Context, userId, todoId string) (enti
 	return *todo, nil
 }
 
-func (r *adapterRedis) GetTodos(ctx context.Context, userId string) ([]entity.Todo, error) {
+func (r *adapterRedis) GetTodos(ctx context.Context, userID string) ([]entity.Todo, error) {
 	return nil, errors.New("not implemented")
 }
 
 func (r *adapterRedis) UpdateTodo(
 	ctx context.Context,
-	userId string,
+	userID string,
 	id string,
 	update entity.Todo,
 ) error {
-	key := baseKeyTodo(userId)
+	key := baseKeyTodo(userID)
 
 	exists, err := r.rd.HExists(ctx, key, id).Result()
 	if !exists || errors.Is(err, redis.Nil) {
@@ -102,8 +102,8 @@ func (r *adapterRedis) UpdateTodo(
 	return nil
 }
 
-func (r *adapterRedis) DeleteTodo(ctx context.Context, userId, id string) error {
-	c, err := r.rd.HDel(ctx, baseKeyTodo(userId), id).Result()
+func (r *adapterRedis) DeleteTodo(ctx context.Context, userID, id string) error {
+	c, err := r.rd.HDel(ctx, baseKeyTodo(userID), id).Result()
 	if err != nil {
 		return errors.Wrapf(err, "failed to delete todo id %s", id)
 	}
@@ -114,10 +114,10 @@ func (r *adapterRedis) DeleteTodo(ctx context.Context, userId, id string) error 
 	return nil
 }
 
-func (r *adapterRedis) DeleteTodos(ctx context.Context, userId string) error {
-	err := r.rd.Del(ctx, baseKeyTodo(userId)).Err()
+func (r *adapterRedis) DeleteTodos(ctx context.Context, userID string) error {
+	err := r.rd.Del(ctx, baseKeyTodo(userID)).Err()
 	if err != nil {
-		return errors.Wrapf(err, "failed to delete todos for user %s", userId)
+		return errors.Wrapf(err, "failed to delete todos for user %s", userID)
 	}
 
 	return nil

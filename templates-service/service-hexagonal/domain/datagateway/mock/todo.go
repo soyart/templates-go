@@ -17,10 +17,10 @@ func NewMockTodoRepo(initTodos []entity.Todo) datagateway.DataGatewayTodo {
 	return &mockRepoTodo{todos: initTodos}
 }
 
-func pointToExactTodo(todos []entity.Todo, userId, todoId string) *entity.Todo {
+func pointToExactTodo(todos []entity.Todo, userID, todoID string) *entity.Todo {
 	for i := range todos {
 		t := &todos[i]
-		if t.Id == todoId && t.UserId == userId {
+		if t.ID == todoID && t.UserID == userID {
 			return t
 		}
 	}
@@ -33,11 +33,11 @@ func (m *mockRepoTodo) CreateTodo(ctx context.Context, todo entity.Todo) error {
 	return nil
 }
 
-func (m *mockRepoTodo) GetTodo(ctx context.Context, userId string, todoId string) (entity.Todo, error) {
+func (m *mockRepoTodo) GetTodo(ctx context.Context, userID string, todoID string) (entity.Todo, error) {
 	for i := range m.todos {
 		todo := &m.todos[i]
 
-		if todo.Id == todoId && todo.UserId == userId {
+		if todo.ID == todoID && todo.UserID == userID {
 			return *todo, nil
 		}
 	}
@@ -45,39 +45,39 @@ func (m *mockRepoTodo) GetTodo(ctx context.Context, userId string, todoId string
 	return entity.Todo{}, nil
 }
 
-func (m *mockRepoTodo) GetTodos(ctx context.Context, userId string) ([]entity.Todo, error) {
-	return filterUserTodos(m.todos, userId)
+func (m *mockRepoTodo) GetTodos(ctx context.Context, userID string) ([]entity.Todo, error) {
+	return filterUserTodos(m.todos, userID)
 }
 
-func (m *mockRepoTodo) UpdateTodo(ctx context.Context, userId string, todoId string, update entity.Todo) error {
-	target := pointToExactTodo(m.todos, userId, todoId)
+func (m *mockRepoTodo) UpdateTodo(ctx context.Context, userID string, todoID string, update entity.Todo) error {
+	target := pointToExactTodo(m.todos, userID, todoID)
 	if target == nil {
-		return core.WrongUserId(todoId, userId)
+		return core.WrongUserID(todoID, userID)
 	}
 
 	*target = update
 	return nil
 }
 
-func (m *mockRepoTodo) DeleteTodo(ctx context.Context, userId string, todoId string) error {
+func (m *mockRepoTodo) DeleteTodo(ctx context.Context, userID string, todoID string) error {
 	for i := range m.todos {
 		t := &m.todos[i]
-		if t.Id == todoId && t.UserId == userId {
+		if t.ID == todoID && t.UserID == userID {
 			m.todos = append(m.todos[:i], m.todos[i+1:]...)
 
 			return nil
 		}
 	}
 
-	return fmt.Errorf("no such todo %s for user %s", todoId, userId)
+	return fmt.Errorf("no such todo %s for user %s", todoID, userID)
 }
 
-func (m *mockRepoTodo) DeleteTodos(ctx context.Context, userId string) error {
+func (m *mockRepoTodo) DeleteTodos(ctx context.Context, userID string) error {
 	var retained []entity.Todo
 	for i := range m.todos {
 		t := &m.todos[i]
 
-		if t.UserId != userId {
+		if t.UserID != userID {
 			retained = append(retained, *t)
 		}
 	}
@@ -86,7 +86,7 @@ func (m *mockRepoTodo) DeleteTodos(ctx context.Context, userId string) error {
 	return nil
 }
 
-func filterUserTodos(todos []entity.Todo, userId string) ([]entity.Todo, error) {
+func filterUserTodos(todos []entity.Todo, userID string) ([]entity.Todo, error) {
 	if todos == nil {
 		return nil, fmt.Errorf("got nil todos")
 	}
@@ -95,7 +95,7 @@ func filterUserTodos(todos []entity.Todo, userId string) ([]entity.Todo, error) 
 	for i := range todos {
 		t := todos[i]
 
-		if t.UserId == userId {
+		if t.UserID == userID {
 			userTodos = append(userTodos, t)
 		}
 	}

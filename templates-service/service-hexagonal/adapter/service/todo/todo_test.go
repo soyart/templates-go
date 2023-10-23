@@ -10,27 +10,27 @@ import (
 	"example.com/servicehex/domain/entity"
 )
 
-func mockTodo(i int, baseTodoId string, userId string) entity.Todo {
+func mockTodo(i int, baseTodoID string, userID string) entity.Todo {
 	return entity.Todo{
-		Id:     fmt.Sprintf("%s-%d", baseTodoId, i),
-		UserId: userId,
+		ID:     fmt.Sprintf("%s-%d", baseTodoID, i),
+		UserID: userID,
 		Text:   fmt.Sprintf("foobar-%d", i),
 	}
 }
 
 func TestTodoCrud(t *testing.T) {
-	baseTodoId, userId := "fooTodo", "user1"
+	baseTodoID, userID := "fooTodo", "user1"
 	repo := mock.NewMockTodoRepo(nil)
-	todo := mockTodo(0, baseTodoId, userId)
+	todo := mockTodo(0, baseTodoID, userID)
 
 	if err := createTodo(nil, repo, todo); err != nil {
 		t.Logf("Unexpected error from createTodo")
 		t.Errorf("Error: %s", err.Error())
 	}
 
-	savedTodo, err := getTodoById(nil, repo, userId, todo.Id)
+	savedTodo, err := getTodoByID(nil, repo, userID, todo.ID)
 	if err != nil {
-		t.Logf("Unexpected error from getTodoById")
+		t.Logf("Unexpected error from getTodoByID")
 		t.Errorf("Error: %s", err.Error())
 	}
 
@@ -42,14 +42,14 @@ func TestTodoCrud(t *testing.T) {
 
 	numTodos := 10
 	for i := 1; i < numTodos; i++ {
-		err := createTodo(nil, repo, mockTodo(i, baseTodoId, userId))
+		err := createTodo(nil, repo, mockTodo(i, baseTodoID, userID))
 		if err != nil {
 			t.Logf("Unexpected error when looping to create mock todo")
 			t.Errorf("Error: %s", err.Error())
 		}
 	}
 
-	todos, err := getTodos(nil, repo, userId, core.SortNoSort)
+	todos, err := getTodos(nil, repo, userID, core.SortNoSort)
 	if l := len(todos); l < numTodos {
 		t.Logf("Unexpected number of mock todos")
 		t.Logf("Expected: %d", numTodos)
@@ -58,7 +58,7 @@ func TestTodoCrud(t *testing.T) {
 	}
 
 	for i := range todos {
-		expected := mockTodo(i, baseTodoId, userId)
+		expected := mockTodo(i, baseTodoID, userID)
 		actual := todos[i]
 
 		if !reflect.DeepEqual(expected, actual) {
@@ -67,10 +67,10 @@ func TestTodoCrud(t *testing.T) {
 			t.Logf("Actual: %+v", actual)
 		}
 
-		deleteTodoById(nil, repo, userId, actual.Id)
+		deleteTodoByID(nil, repo, userID, actual.ID)
 	}
 
-	todos, err = getTodos(nil, repo, userId, core.SortNoSort)
+	todos, err = getTodos(nil, repo, userID, core.SortNoSort)
 	if err != nil {
 		t.Logf("Unexpected error after delete")
 		t.Errorf("Error: %s", err.Error())
@@ -81,16 +81,16 @@ func TestTodoCrud(t *testing.T) {
 	}
 
 	for i := 0; i < numTodos; i++ {
-		todoId := mockTodo(i, baseTodoId, userId).Id
+		todoID := mockTodo(i, baseTodoID, userID).ID
 
-		todo, err := getTodoById(nil, repo, userId, todoId)
+		todo, err := getTodoByID(nil, repo, userID, todoID)
 		if err != nil {
 			t.Logf("Found error when get after delete")
 			t.Logf("Error: %s", err.Error())
 		}
 
-		if todo.Id == todoId {
-			t.Errorf("Unexpected value (todoId) after delete")
+		if todo.ID == todoID {
+			t.Errorf("Unexpected value (todoID) after delete")
 		}
 
 		if todo.Text != "" {

@@ -2,18 +2,18 @@ package core
 
 import "fmt"
 
-type ErrWrongUserId struct {
-	todoId string
-	userId string
+type ErrWrongUserID struct {
+	todoID string
+	userID string
 }
 
-func (e ErrWrongUserId) Error() string {
-	return fmt.Sprintf("no such todoId %s with userId %s", e.todoId, e.userId)
+func (e ErrWrongUserID) Error() string {
+	return fmt.Sprintf("no such todoID %s with userID %s", e.todoID, e.userID)
 }
 
-func WrongUserId(todoId, userId string) error {
-	return ErrWrongUserId{
-		todoId: todoId,
-		userId: userId,
+func WrongUserID(todoID, userID string) error {
+	return ErrWrongUserID{
+		todoID: todoID,
+		userID: userID,
 	}
 }

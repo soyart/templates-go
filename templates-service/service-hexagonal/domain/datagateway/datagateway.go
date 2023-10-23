@@ -8,11 +8,11 @@ import (
 
 type DataGatewayTodo interface {
 	CreateTodo(ctx context.Context, todo entity.Todo) error
-	GetTodo(ctx context.Context, userId string, todoId string) (entity.Todo, error)
-	GetTodos(ctx context.Context, userId string) ([]entity.Todo, error)
-	UpdateTodo(ctx context.Context, userId string, todoId string, update entity.Todo) error
-	DeleteTodo(ctx context.Context, userId string, todoId string) error
-	DeleteTodos(ctx context.Context, userId string) error
+	GetTodo(ctx context.Context, userID string, todoID string) (entity.Todo, error)
+	GetTodos(ctx context.Context, userID string) ([]entity.Todo, error)
+	UpdateTodo(ctx context.Context, userID string, todoID string, update entity.Todo) error
+	DeleteTodo(ctx context.Context, userID string, todoID string) error
+	DeleteTodos(ctx context.Context, userID string) error
 }
 
 type DataGatewayUser interface {

@@ -12,19 +12,19 @@ type mockRepoUser struct {
 }
 
 func (m *mockRepoUser) CreateUser(ctx context.Context, user entity.User) error {
-	_, found := m.users[user.Id]
+	_, found := m.users[user.ID]
 	if found {
-		return fmt.Errorf("duplicate user id %s", user.Id)
+		return fmt.Errorf("duplicate user id %s", user.ID)
 	}
 
-	m.users[user.Id] = user
+	m.users[user.ID] = user
 	return nil
 }
 
-func (m *mockRepoUser) GetUser(ctx context.Context, userId string) (entity.User, error) {
-	u, found := m.users[userId]
+func (m *mockRepoUser) GetUser(ctx context.Context, userID string) (entity.User, error) {
+	u, found := m.users[userID]
 	if !found {
-		return u, fmt.Errorf("userId %s not found", userId)
+		return u, fmt.Errorf("userID %s not found", userID)
 	}
 
 	return u, nil
@@ -40,29 +40,29 @@ func (m *mockRepoUser) GetUserByUsername(ctx context.Context, username string) (
 	return entity.User{}, fmt.Errorf("no such username %s", username)
 }
 
-func (m *mockRepoUser) UpdateUser(ctx context.Context, userId string, user entity.User) error {
-	savedUser, found := m.users[userId]
+func (m *mockRepoUser) UpdateUser(ctx context.Context, userID string, user entity.User) error {
+	savedUser, found := m.users[userID]
 	if !found {
-		return fmt.Errorf("no such userId %s", user.Id)
+		return fmt.Errorf("no such userID %s", user.ID)
 	}
-	if savedUser.Id != userId {
-		panic("mock bug - unexpected userId")
+	if savedUser.ID != userID {
+		panic("mock bug - unexpected userID")
 	}
 
-	m.users[userId] = user
+	m.users[userID] = user
 	return nil
 }
 
-func (m *mockRepoUser) DeleteUser(ctx context.Context, userId string) error {
-	savedUser, found := m.users[userId]
+func (m *mockRepoUser) DeleteUser(ctx context.Context, userID string) error {
+	savedUser, found := m.users[userID]
 	if !found {
 		return fmt.Errorf("")
 	}
 
-	if savedUser.Id != userId {
-		panic("mock bug - unexpected userId")
+	if savedUser.ID != userID {
+		panic("mock bug - unexpected userID")
 	}
 
-	delete(m.users, userId)
+	delete(m.users, userID)
 	return nil
 }

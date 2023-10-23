@@ -12,7 +12,7 @@ import (
 )
 
 func NewJwtToken(
-	iss string, // userId
+	iss string, // userID
 	secret []byte,
 ) (
 	string, // Token
@@ -60,7 +60,7 @@ func ExtractAndDecodeJwtFiber(c *fiber.Ctx) (spec.UserLoginInfo, error) {
 	}
 
 	return spec.UserLoginInfo{
-		UserId:     userUuid,
+		UserID:     userUuid,
 		Expiration: time.Unix(int64(expUnixFloat), 0),
 	}, nil
 }

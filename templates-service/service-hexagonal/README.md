@@ -3,6 +3,61 @@
 An example project for simple Go TODO back-end API,
 organized with hexagonal architecture (ports-and-adapters).
 
+## Tree overview
+
+```shell
+$ tree --filesfirst
+.
+├── go.mod
+├── go.sum
+├── README.md
+├── adapter
+│   ├── datagateway
+│   │   └── redisadapter
+│   │       └── redisadapter.go
+│   └── service
+│       ├── todo
+│       │   ├── service.go
+│       │   ├── todo.go
+│       │   └── todo_test.go
+│       └── user
+│           ├── service.go
+│           └── user.go
+├── config
+│   ├── config.example.yaml
+│   ├── config.go
+│   └── redis.go
+├── domain
+│   ├── core
+│   │   ├── core.go
+│   │   ├── errors.go
+│   │   └── sort_todos.go
+│   ├── datagateway
+│   │   ├── datagateway.go
+│   │   └── mock
+│   │       ├── todo.go
+│   │       └── user.go
+│   └── entity
+│       └── entity.go
+├── internal
+│   └── pwhash
+│       └── bcrypt.go
+└── restapi
+    ├── cmd
+    ├── internal
+    │   ├── api
+    │   │   ├── api.go
+    │   │   ├── todo.go
+    │   │   └── user.go
+    │   ├── middleware
+    │   │   └── jwt.go
+    │   └── utils
+    │       └── jwt.go
+    └── spec
+        ├── todo.go
+        └── user.go
+```
+
 ## Hexagonal architecture (HexArch)
 
 > Note: HexArch has nothing to do with number 6 or hexagons
@@ -202,8 +257,8 @@ package core
 /* Port */
 type PortTodo interface {
   CreateTodo(entity.Todo) error
-  GetLiveTodos(userId string) ([]entity.Todo, error)
-  ExpireTodo(userId string, todoId string) error
+  GetLiveTodos(userID string) ([]entity.Todo, error)
+  ExpireTodo(userID string, todoID string) error
 }
 ```
 
@@ -223,8 +278,8 @@ type serviceTodo struct {
 func (s *serviceTodo) CreateTodo(todo entity.Todo) error {
   return s.repo.CreateTodo(todo)
 }
-func (s *serviceTodo) GetLiveTodos(userId string) {..}
-func (s *serviceTodo) ExpireTodo(userId, todoId string) {..}
+func (s *serviceTodo) GetLiveTodos(userID string) {..}
+func (s *serviceTodo) ExpireTodo(userID, todoID string) {..}
 ```
 
 If our code happens to be run as either a HTTP REST server or gRPC server,

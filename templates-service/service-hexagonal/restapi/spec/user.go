@@ -8,6 +8,6 @@ type DtoRegisterLoginUser struct {
 }
 
 type UserLoginInfo struct {
-	UserId     string
+	UserID     string
 	Expiration time.Time
 }

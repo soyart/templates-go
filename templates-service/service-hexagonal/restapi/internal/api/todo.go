@@ -23,13 +23,13 @@ func (a *restApi) CreateTodo(c *fiber.Ctx) error {
 	userInfo, err := utils.ExtractAndDecodeJwtFiber(c)
 	if err != nil {
 		return c.Status(http.StatusInternalServerError).JSON(map[string]string{
-			"error": "failed to validate userId for authentication",
+			"error": "failed to validate userID for authentication",
 		})
 	}
 
 	todo := entity.Todo{
-		Id:        core.TodoId(),
-		UserId:    userInfo.UserId,
+		ID:        core.TodoID(),
+		UserID:    userInfo.UserID,
 		Text:      createTodo.Text,
 		Deadline:  createTodo.Deadline,
 		CreatedAt: c.Context().ConnTime(),

@@ -25,22 +25,22 @@ func createTodo(
 	return nil
 }
 
-func getTodoById(
+func getTodoByID(
 	ctx context.Context,
 	repo datagateway.DataGatewayTodo,
-	userId string,
-	todoId string,
+	userID string,
+	todoID string,
 ) (
 	entity.Todo,
 	error,
 ) {
-	todo, err := repo.GetTodo(ctx, userId, todoId)
+	todo, err := repo.GetTodo(ctx, userID, todoID)
 	if err != nil {
 		return todo, errors.WithStack(err)
 	}
 
-	if todo.UserId != userId {
-		return todo, core.WrongUserId(todoId, userId)
+	if todo.UserID != userID {
+		return todo, core.WrongUserID(todoID, userID) //nolint:wrapcheck
 	}
 
 	return todo, nil
@@ -49,13 +49,13 @@ func getTodoById(
 func getTodos(
 	ctx context.Context,
 	repo datagateway.DataGatewayTodo,
-	userId string,
+	userID string,
 	sortMode core.EnumSortMode,
 ) (
 	[]entity.Todo,
 	error,
 ) {
-	todos, err := repo.GetTodos(ctx, userId)
+	todos, err := repo.GetTodos(ctx, userID)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
@@ -68,14 +68,14 @@ func getTodos(
 func getExpiredTodos(
 	ctx context.Context,
 	repo datagateway.DataGatewayTodo,
-	userId string,
+	userID string,
 	cutoff time.Time,
 	sortMode core.EnumSortMode,
 ) (
 	[]entity.Todo,
 	error,
 ) {
-	todos, err := repo.GetTodos(ctx, userId)
+	todos, err := repo.GetTodos(ctx, userID)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
@@ -98,14 +98,14 @@ func getExpiredTodos(
 func matchTodoTextPattern(
 	ctx context.Context,
 	repo datagateway.DataGatewayTodo,
-	userId string,
+	userID string,
 	pattern string,
 	sortMode core.EnumSortMode,
 ) (
 	[]entity.Todo,
 	error,
 ) {
-	todos, err := repo.GetTodos(ctx, userId)
+	todos, err := repo.GetTodos(ctx, userID)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
@@ -123,18 +123,18 @@ func matchTodoTextPattern(
 	return matched, nil
 }
 
-func expireTodoById(
+func expireTodoByID(
 	ctx context.Context,
 	repo datagateway.DataGatewayTodo,
-	userId string,
-	todoId string,
+	userID string,
+	todoID string,
 ) error {
-	todo, err := repo.GetTodo(ctx, userId, todoId)
+	todo, err := repo.GetTodo(ctx, userID, todoID)
 	if err != nil {
 		return errors.WithStack(err)
 	}
-	if todo.UserId != userId {
-		return core.WrongUserId(todoId, userId)
+	if todo.UserID != userID {
+		return core.WrongUserID(todoID, userID) //nolint:wrapcheck
 	}
 
 	if todo.Expired {
@@ -143,28 +143,28 @@ func expireTodoById(
 
 	core.ExpireTodo(&todo)
 
-	if err := repo.UpdateTodo(ctx, userId, todoId, todo); err != nil {
+	if err := repo.UpdateTodo(ctx, userID, todoID, todo); err != nil {
 		return errors.WithStack(err)
 	}
 
 	return nil
 }
 
-func deleteTodoById(
+func deleteTodoByID(
 	ctx context.Context,
 	repo datagateway.DataGatewayTodo,
-	userId string,
-	todoId string,
+	userID string,
+	todoID string,
 ) error {
-	todo, err := repo.GetTodo(ctx, userId, todoId)
+	todo, err := repo.GetTodo(ctx, userID, todoID)
 	if err != nil {
 		return errors.WithStack(err)
 	}
-	if todo.UserId != userId {
-		return core.WrongUserId(todoId, userId)
+	if todo.UserID != userID {
+		return core.WrongUserID(todoID, userID) //nolint:wrapcheck
 	}
 
-	if err := repo.DeleteTodo(ctx, userId, todoId); err != nil {
+	if err := repo.DeleteTodo(ctx, userID, todoID); err != nil {
 		return errors.WithStack(err)
 	}
 
@@ -174,9 +174,9 @@ func deleteTodoById(
 func deleteTodos(
 	ctx context.Context,
 	repo datagateway.DataGatewayTodo,
-	userId string,
+	userID string,
 ) error {
-	if err := repo.DeleteTodos(ctx, userId); err != nil {
+	if err := repo.DeleteTodos(ctx, userID); err != nil {
 		return errors.WithStack(err)
 	}
 
