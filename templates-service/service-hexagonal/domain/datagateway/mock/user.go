@@ -4,11 +4,16 @@ import (
 	"context"
 	"fmt"
 
+	"example.com/servicehex/domain/datagateway"
 	"example.com/servicehex/domain/entity"
 )
 
 type mockRepoUser struct {
 	users map[string]entity.User
+}
+
+func NewMockRepoUser() datagateway.DataGatewayUser {
+	return &mockRepoUser{users: make(map[string]entity.User)}
 }
 
 func (m *mockRepoUser) CreateUser(ctx context.Context, user entity.User) error {
