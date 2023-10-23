@@ -1,6 +1,8 @@
-package restapi
+package api
 
-import "example.com/servicehex/domain/core"
+import (
+	"example.com/servicehex/domain/core"
+)
 
 // A HTTP REST `view/presentation` layer of our program
 // Adapter `serviceTodo` connects to core port PortTodo,
@@ -8,4 +10,6 @@ import "example.com/servicehex/domain/core"
 type restApi struct {
 	serviceTodo core.PortTodo
 	serviceUser core.PortUser
+
+	authSecret []byte
 }
