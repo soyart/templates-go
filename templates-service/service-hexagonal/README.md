@@ -42,12 +42,12 @@ $ tree --filesfirst
 │   │       └── user.go
 │   └── entity
 │       └── entity.go
-├── grpc
-│   └── cmd
-│       └── main.go
 ├── internal
 │   └── pwhash
 │       └── bcrypt.go
+├── grpc
+│   └── cmd
+│       └── main.go
 └── restapi
     ├── cmd
     │   └── main.go
