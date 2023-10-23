@@ -1,5 +1,6 @@
 package config
 
-type RedisConf struct {
+type ConfRedis struct {
 	Port uint
+	Db   uint
 }

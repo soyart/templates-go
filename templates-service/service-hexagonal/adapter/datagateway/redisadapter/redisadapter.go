@@ -17,7 +17,7 @@ type adapterRedis struct {
 	rd *redis.Client
 }
 
-func New(conf config.RedisConf) datagateway.DataGatewayTodo {
+func New(conf config.ConfRedis) datagateway.DataGatewayTodo {
 	rd := redis.NewClient(&redis.Options{
 		Addr: confAddress(conf),
 	})
@@ -33,7 +33,7 @@ func baseKeyTodo(userID string) string {
 	return "todo:" + userID
 }
 
-func confAddress(conf config.RedisConf) string {
+func confAddress(conf config.ConfRedis) string {
 	return fmt.Sprintf("localhost:%d", conf.Port)
 }
 
